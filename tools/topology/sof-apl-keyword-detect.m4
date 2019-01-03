@@ -36,9 +36,8 @@ dnl     frames, deadline, priority, core)
 # Schedule 320 frames per 1000us deadline on core 0 with priority 0
 PIPELINE_PCM_ADD(sof/pipe-kfbm-capture.m4,
 	1, 0, 2, s16le,
-	KWD_PERIOD_FRAMES,
-	KWD_PIPE_SCH_DEADLINE_US,
-	0, 0)
+	KWD_PIPE_SCH_DEADLINE_US, 0, 0,
+	16000, 16000, 16000)
 
 #
 # DAIs configuration
@@ -55,7 +54,6 @@ dnl     frames, deadline, priority, core)
 DAI_ADD(sof/pipe-dai-capture.m4,
 	1, DMIC, 1, NoCodec-6,
 	PIPELINE_SINK_1, 2, s16le,
-	KWD_PERIOD_FRAMES,
 	KWD_PIPE_SCH_DEADLINE_US,
 	0, 0)
 
@@ -63,10 +61,11 @@ DAI_ADD(sof/pipe-dai-capture.m4,
 dnl PIPELINE_ADD(pipeline,
 dnl     pipe id, max channels, format,
 dnl     frames, deadline, priority, core)
-PIPELINE_ADD(sof/pipe-detect.m4, 2, 2, s16le,
-	KWD_PERIOD_FRAMES,
-	KWD_PIPE_SCH_DEADLINE_US,
-	0, 0, PIPELINE_SCHED_COMP_1)
+PIPELINE_ADD(sof/pipe-detect.m4,
+	2, 2, s16le,
+	KWD_PIPE_SCH_DEADLINE_US, 0, 0,
+	PIPELINE_SCHED_COMP_1, 0,
+	16000, 16000, 16000)
 
 # Connect pipelines together
 SectionGraph."pipe-sof-apl-keyword-detect" {

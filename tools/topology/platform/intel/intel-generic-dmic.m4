@@ -17,16 +17,16 @@ dnl     pipe id, pcm, max channels, format,
 dnl     frames, deadline, priority, core)
 
 # Passthrough capture pipeline using max channels defined by CHANNELS.
-# Schedule 48 frames per 1000us deadline on core 0 with priority 0
+# Set 1000us deadline on core 0 with priority 0
 PIPELINE_PCM_ADD(sof/pipe-volume-capture.m4,
 	DMIC_PIPELINE_48k_ID, DMIC_DAI_LINK_48k_ID, CHANNELS, s32le,
-	48, 1000, 0, 0)
+	1000, 0, 0, 48000, 48000, 48000)
 
 # Passthrough capture pipeline using max channels defined by CHANNELS.
 # Schedule 16 frames per 1000us deadline on core 0 with priority 0
 PIPELINE_PCM_ADD(sof/pipe-volume-capture-16khz.m4,
 	DMIC_PIPELINE_16k_ID, DMIC_DAI_LINK_16k_ID, CHANNELS, s32le,
-	16, 1000, 0, 0)
+	1000, 0, 0, 16000, 16000, 16000)
 
 #
 # DAIs configuration
@@ -38,19 +38,18 @@ dnl     buffer, periods, format,
 dnl     frames, deadline, priority, core)
 
 # capture DAI is DMIC 0 using 2 periods
-# Buffers use s32le format, with 48 frame per 1000us on core 0 with priority 0
+# Buffers use s32le format, 1000us deadline on core 0 with priority 0
 DAI_ADD(sof/pipe-dai-capture.m4,
 	DMIC_PIPELINE_48k_ID, DMIC, 0, dmic01,
 	concat(`PIPELINE_SINK_', DMIC_PIPELINE_48k_ID), 2, s32le,
-	48, 1000, 0, 0)
+	1000, 0, 0, 48000, 48000, 48000)
 
 # capture DAI is DMIC 1 using 2 periods
 # Buffers use s32le format, with 16 frame per 1000us on core 0 with priority 0
 DAI_ADD(sof/pipe-dai-capture.m4,
 	DMIC_PIPELINE_16k_ID, DMIC, 1, dmic16k,
 	concat(`PIPELINE_SINK_', DMIC_PIPELINE_16k_ID), 2, s32le,
-	16, 1000, 0, 0)
-
+	1000, 0, 0, 16000, 16000, 16000)
 
 dnl PCM_DUPLEX_ADD(name, pcm_id, playback, capture)
 dnl PCM_CAPTURE_ADD(name, pipeline, capture)
