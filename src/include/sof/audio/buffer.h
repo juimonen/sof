@@ -114,6 +114,7 @@ typedef void (*cache_buff_op)(struct comp_buffer *);
 
 /* pipeline buffer creation and destruction */
 struct comp_buffer *buffer_new(struct sof_ipc_buffer *desc);
+int buffer_resize(struct comp_buffer *buffer, uint32_t size);
 void buffer_free(struct comp_buffer *buffer);
 
 /* called by a component after producing data into this buffer */
@@ -223,4 +224,15 @@ static inline void *buffer_get_frag(struct comp_buffer *buffer, void *ptr,
 	return current;
 }
 
+static inline void buffer_init(struct comp_buffer *buffer, uint32_t size)
+{
+	buffer->alloc_size = size;
+	buffer->size = size;
+	buffer->w_ptr = buffer->addr;
+	buffer->r_ptr = buffer->addr;
+	buffer->end_addr = buffer->addr + size;
+	buffer->free = size;
+	buffer->avail = 0;
+	buffer_zero(buffer);
+}
 #endif
