@@ -235,6 +235,7 @@ struct comp_dev {
 	spinlock_t lock;	   /**< lock for this component */
 	uint64_t position;	   /**< component rendering position */
 	uint32_t frames;	   /**< number of frames we copy to sink */
+	uint32_t output_rate;      /**< 0 means all output rates are fine */
 	struct pipeline *pipeline; /**< pipeline we belong to */
 
 	/** common runtime configuration for downstream/upstream */
