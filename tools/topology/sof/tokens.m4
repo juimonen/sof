@@ -89,3 +89,10 @@ SectionVendorTokens."sof_process_tokens" {
 	SOF_TKN_PROCESS_TYPE			"900"
 	SOF_TKN_PROCESS_SUBTYPE                 "901"
 }
+
+SectionVendorTokens."sof_ch_sel_tokens" {
+	SOF_TKN_CS_IN_CNT			"1200"
+	SOF_TKN_CS_OUT_CNT			"1201"
+	SOF_TKN_CS_OUT_CH_INDEX			"1202"
+}
+
