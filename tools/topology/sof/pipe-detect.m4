@@ -14,6 +14,7 @@ include(`pga.m4')
 include(`ch_sel.m4')
 include(`detect.m4')
 include(`mixercontrol.m4')
+include(`bytecontrol.m4')
 include(`pipeline.m4')
 
 #
@@ -29,6 +30,24 @@ C_CONTROLMIXER(Detect Switch, PIPELINE_ID,
 	Channel register and shift for Front Left/Right,
 	LIST(`	', KCONTROL_CHANNEL(FL, 2, 0), KCONTROL_CHANNEL(FR, 2, 1)))
 
+# Selector initial parameters
+CONTROLBYTES_PRIV(SELECTOR_priv,
+`       bytes "0x53,0x4f,0x46,0x00,0x00,0x00,0x00,0x00,'
+`       0x0c,0x00,0x00,0x00,0x00,0x10,0x00,0x03,'
+`       0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,'
+`       0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,'
+`       0x02,0x00,0x00,0x00,0x01,0x00,0x00,0x00,'
+`       0x00,0x00,0x00,0x00"'
+)
+
+# Selector Bytes control with max value of 255
+C_CONTROLBYTES(SELECTOR, PIPELINE_ID,
+	CONTROLBYTES_OPS(bytes, 258 binds the mixer control to bytes get/put handlers, 258, 258),
+	CONTROLBYTES_EXTOPS(258 binds the mixer control to bytes get/put handlers, 258, 258),
+	, , ,
+	CONTROLBYTES_MAX(, 304),
+	,
+	SELECTOR_priv)
 #
 # Components and Buffers
 #
@@ -37,7 +56,7 @@ C_CONTROLMIXER(Detect Switch, PIPELINE_ID,
 W_DETECT(0, PIPELINE_FORMAT, 0, 2, KEYWORD,
 	LIST(`		', "Detect Switch PIPELINE_ID"))
 
-W_SELECTOR(0, PIPELINE_FORMAT, 2, 2, 2, 1, 0)
+W_SELECTOR(0, PIPELINE_FORMAT, 2, 2, LIST(`		', "SELECTOR"))
 
 # Capture Buffers
 W_BUFFER(1, COMP_BUFFER_SIZE(2,
