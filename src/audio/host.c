@@ -20,6 +20,8 @@
 #include <sof/wait.h>
 #include <sof/audio/component.h>
 #include <sof/audio/pipeline.h>
+#include <sof/audio/format.h>
+#include <sof/math/numbers.h>
 #include <platform/dma.h>
 #include <arch/cache.h>
 #include <ipc/dai.h>
@@ -489,12 +491,19 @@ static int host_params(struct comp_dev *dev)
 	uint32_t buffer_size;
 	uint32_t buffer_count;
 	uint32_t buffer_single_size;
+	uint32_t align;
 	int err;
 
 	trace_event(TRACE_CLASS_HOST, "host_params()");
 
 	/* host params always installed by pipeline IPC */
 	hd->host_size = dev->params.buffer.size;
+
+	err = dma_get_attribute(hd->dma, DMA_ATTR_ALIGNMENT, &align);
+	if (err < 0) {
+		trace_host_error("could not get dma alignment");
+		return err;
+	}
 
 	/* determine source and sink buffer elems */
 	if (dev->params.direction == SOF_IPC_STREAM_PLAYBACK) {
@@ -509,11 +518,15 @@ static int host_params(struct comp_dev *dev)
 		hd->period_count = cconfig->periods_sink;
 #if CONFIG_DMA_GW
 		buffer_count = hd->period_count;
-		buffer_single_size = dev->frames * comp_frame_bytes(dev);
+		buffer_single_size = ALIGN_UP(dev->frames *
+					      comp_frame_bytes(dev),
+					      align);
 #else
 		buffer_count = 1;
-		buffer_single_size = hd->period_count * dev->frames *
-			comp_frame_bytes(dev);
+		buffer_single_size = ALIGN_UP(hd->period_count *
+					      dev->frames *
+					      comp_frame_bytes(dev),
+					      align);
 
 		hd->source = &hd->host;
 		hd->sink = &hd->local;
@@ -529,7 +542,9 @@ static int host_params(struct comp_dev *dev)
 		config->direction = DMA_DIR_LMEM_TO_HMEM;
 		hd->period_count = cconfig->periods_source;
 		buffer_count = hd->period_count;
-		buffer_single_size = dev->frames * comp_frame_bytes(dev);
+		buffer_single_size = ALIGN_UP(dev->frames *
+					      comp_frame_bytes(dev),
+					      align);
 
 #if !CONFIG_DMA_GW
 		hd->source = &hd->local;
@@ -543,8 +558,8 @@ static int host_params(struct comp_dev *dev)
 		return -EINVAL;
 	}
 
-	/* calculate period size based on config */
-	hd->period_bytes = dev->frames * comp_frame_bytes(dev);
+	hd->period_bytes = ALIGN_UP(dev->frames * comp_frame_bytes(dev), align);
+
 	if (hd->period_bytes == 0) {
 		trace_host_error("host_params() error: invalid period_bytes");
 		return -EINVAL;
@@ -552,6 +567,13 @@ static int host_params(struct comp_dev *dev)
 
 	/* resize the buffer if space is available to align with period size */
 	buffer_size = hd->period_count * hd->period_bytes;
+	err = buffer_resize(hd->dma_buffer, buffer_size);
+	if (err < 0) {
+		trace_host_error("host buffer resize failed, buffer_size = %u",
+				 buffer_size);
+		return err;
+	}
+
 	err = buffer_set_size(hd->dma_buffer, buffer_size);
 	if (err < 0) {
 		trace_host_error("host_params() error:"
