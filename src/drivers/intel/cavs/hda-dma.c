@@ -953,6 +953,23 @@ static int hda_dma_data_size(struct dma *dma, unsigned int channel,
 	return 0;
 }
 
+static int hda_dma_get_attribute(struct dma *dma, uint32_t type,
+				 uint32_t *value)
+{
+	int ret = 0;
+
+	switch (type) {
+	case DMA_ATTR_ALIGNMENT:
+		*value = PLATFORM_HDA_BUFFER_ALIGNMENT;
+		break;
+	default:
+		ret = -EINVAL;
+		break;
+	}
+
+	return ret;
+}
+
 const struct dma_ops hda_host_dma_ops = {
 	.channel_get		= hda_dma_channel_get,
 	.channel_put		= hda_dma_channel_put,
@@ -969,6 +986,7 @@ const struct dma_ops hda_host_dma_ops = {
 	.probe			= hda_dma_probe,
 	.remove			= hda_dma_remove,
 	.get_data_size		= hda_dma_data_size,
+	.get_attribute		= hda_dma_get_attribute,
 };
 
 const struct dma_ops hda_link_dma_ops = {
@@ -987,4 +1005,5 @@ const struct dma_ops hda_link_dma_ops = {
 	.probe			= hda_dma_probe,
 	.remove			= hda_dma_remove,
 	.get_data_size		= hda_dma_data_size,
+	.get_attribute		= hda_dma_get_attribute,
 };
