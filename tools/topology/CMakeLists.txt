@@ -34,6 +34,8 @@ set(TPLGS
 	"sof-hda-generic-idisp\;sof-hda-generic-idisp-2ch\;-DCHANNELS=2\;-DDMICPROC_FILTER1=eq_iir_coef_highpass_40hz_20db_48khz.m4\;-DDMIC16KPROC_FILTER1=eq_iir_coef_highpass_40hz_20db_16khz.m4"
 	"sof-hda-generic-idisp\;sof-hda-generic-idisp-4ch\;-DCHANNELS=4\;-DDMICPROC_FILTER1=eq_iir_coef_highpass_40hz_20db_48khz.m4\;-DDMIC16KPROC_FILTER1=eq_iir_coef_highpass_40hz_20db_16khz.m4"
 	"sof-hda-asrc\;sof-hda-asrc-2ch\;-DCHANNELS=2"
+	"sof-hda-generic-mux\;sof-hda-generic-mux-2ch\;-DCHANNELS=2"
+	"sof-hda-generic-demux\;sof-hda-generic-demux-2ch\;-DCHANNELS=2"
 	"sof-apl-nocodec\;sof-apl-nocodec"
 	"sof-apl-keyword-detect\;sof-apl-keyword-detect"
 	"sof-bdw-codec\;sof-bdw-rt286\;-DCODEC=RT286"

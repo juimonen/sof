@@ -88,6 +88,9 @@ define(`W_MUXDEMUX',
 `	bytes ['
 		$7
 `	]'
+`	enum ['
+		$8
+`	]'
 `}')
 
 divert(0)dnl
