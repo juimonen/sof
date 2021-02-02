@@ -209,21 +209,18 @@ static int teardown_test_case(void **state)
 static void test_mux_copy_proc_16(void **state)
 {
 	struct test_data *td = *((struct test_data **)state);
-	int16_t expected_result[PLATFORM_MAX_CHANNELS];
+	int16_t expected_result[PLATFORM_MAX_CHANNELS] = {0};
 	int i, j, k;
 
 	assert_int_equal(comp_copy(td->dev), 0);
 
-	for (i = 0; i < PLATFORM_MAX_CHANNELS; ++i) {
-		int32_t sample = 0;
-
-		for (j = 0; j < MUX_MAX_STREAMS; ++j) {
+	for (i = 0; i < MUX_MAX_STREAMS; ++i) {
+		for (j = 0; j < PLATFORM_MAX_CHANNELS; ++j) {
 			for (k = 0; k < PLATFORM_MAX_CHANNELS; ++k) {
-				if (td->mask[j][i] & BIT(k))
-					sample = input_16b[j][k];
+				if (td->mask[i][j] & BIT(k))
+					expected_result[k] = input_16b[i][k];
 			}
 		}
-		expected_result[i] = sample;
 	}
 
 	assert_memory_equal(td->output, expected_result,
@@ -233,21 +230,18 @@ static void test_mux_copy_proc_16(void **state)
 static void test_mux_copy_proc_24(void **state)
 {
 	struct test_data *td = *((struct test_data **)state);
-	int32_t expected_result[PLATFORM_MAX_CHANNELS];
+	int32_t expected_result[PLATFORM_MAX_CHANNELS] = {0};
 	int i, j, k;
 
 	assert_int_equal(comp_copy(td->dev), 0);
 
-	for (i = 0; i < PLATFORM_MAX_CHANNELS; ++i) {
-		int32_t sample = 0;
-
-		for (j = 0; j < MUX_MAX_STREAMS; ++j) {
+	for (i = 0; i < MUX_MAX_STREAMS; ++i) {
+		for (j = 0; j < PLATFORM_MAX_STREAMS; ++j) {
 			for (k = 0; k < PLATFORM_MAX_CHANNELS; ++k) {
-				if (td->mask[j][i] & BIT(k))
-					sample = input_24b[j][k];
+				if (td->mask[i][j] & BIT(k))
+					expected_result[k] = input_24b[i][k];
 			}
 		}
-		expected_result[i] = sample;
 	}
 
 	assert_memory_equal(td->output, expected_result,
@@ -257,21 +251,19 @@ static void test_mux_copy_proc_24(void **state)
 static void test_mux_copy_proc_32(void **state)
 {
 	struct test_data *td = *((struct test_data **)state);
-	int32_t expected_result[PLATFORM_MAX_CHANNELS];
+	int32_t expected_result[PLATFORM_MAX_CHANNELS] = {0};
 	int i, j, k;
 
 	assert_int_equal(comp_copy(td->dev), 0);
 
-	for (i = 0; i < PLATFORM_MAX_CHANNELS; ++i) {
-		int32_t sample = 0;
-
-		for (j = 0; j < MUX_MAX_STREAMS; ++j) {
+	for (i = 0; i < MUX_MAX_STREAMS; ++i) {
+		for (j = 0; j < PLATFORM__MAX_CHANNELS; ++j) {
 			for (k = 0; k < PLATFORM_MAX_CHANNELS; ++k) {
 				if (td->mask[j][i] & BIT(k))
-					sample = input_32b[j][k];
+					expected_result[k] = input_32b[i][k];
 			}
 		}
-		expected_result[i] = sample;
+
 	}
 
 	assert_memory_equal(td->output, expected_result,

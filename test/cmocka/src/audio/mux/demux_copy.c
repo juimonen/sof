@@ -187,20 +187,16 @@ static int teardown_test_case(void **state)
 static void test_demux_copy_proc_16(void **state)
 {
 	struct test_data *td = *((struct test_data **)state);
-	int16_t expected_results[MUX_MAX_STREAMS][PLATFORM_MAX_CHANNELS];
+	int16_t expected_results[MUX_MAX_STREAMS][PLATFORM_MAX_CHANNELS] = {0};
 	int i, j, k;
 
 	assert_int_equal(comp_copy(td->dev), 0);
 
 	for (i = 0; i < MUX_MAX_STREAMS; ++i) {
 		for (j = 0; j < PLATFORM_MAX_CHANNELS; ++j) {
-			int64_t sample = 0;
-
 			for (k = 0; k < PLATFORM_MAX_CHANNELS; ++k)
 				if (td->mask[i][j] & BIT(k))
-					sample = input_16b[k];
-
-			expected_results[i][j] = sample;
+					expected_results[i][k] = input_16b[k];
 		}
 	}
 
@@ -212,20 +208,16 @@ static void test_demux_copy_proc_16(void **state)
 static void test_demux_copy_proc_24(void **state)
 {
 	struct test_data *td = *((struct test_data **)state);
-	int32_t expected_results[MUX_MAX_STREAMS][PLATFORM_MAX_CHANNELS];
+	int32_t expected_results[MUX_MAX_STREAMS][PLATFORM_MAX_CHANNELS] = {0};
 	int i, j, k;
 
 	assert_int_equal(comp_copy(td->dev), 0);
 
 	for (i = 0; i < MUX_MAX_STREAMS; ++i) {
 		for (j = 0; j < PLATFORM_MAX_CHANNELS; ++j) {
-			int32_t sample = 0;
-
 			for (k = 0; k < PLATFORM_MAX_CHANNELS; ++k)
 				if (td->mask[i][j] & BIT(k))
-					sample = input_24b[k];
-
-			expected_results[i][j] = sample;
+					expected_results[i][k] = input_24b[k];
 		}
 	}
 
@@ -237,20 +229,16 @@ static void test_demux_copy_proc_24(void **state)
 static void test_demux_copy_proc_32(void **state)
 {
 	struct test_data *td = *((struct test_data **)state);
-	int32_t expected_results[MUX_MAX_STREAMS][PLATFORM_MAX_CHANNELS];
+	int32_t expected_results[MUX_MAX_STREAMS][PLATFORM_MAX_CHANNELS] = {0};
 	int i, j, k;
 
 	assert_int_equal(comp_copy(td->dev), 0);
 
 	for (i = 0; i < MUX_MAX_STREAMS; ++i) {
 		for (j = 0; j < PLATFORM_MAX_CHANNELS; ++j) {
-			int32_t sample = 0;
-
 			for (k = 0; k < PLATFORM_MAX_CHANNELS; ++k)
 				if (td->mask[i][j] & BIT(k))
-					sample = input_32b[k];
-
-			expected_results[i][j] = sample;
+					expected_results[i][k] = input_32b[k];
 		}
 	}
 
