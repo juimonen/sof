@@ -136,7 +136,7 @@ PIPELINE_PCM_ADD(sof/pipe-volume-playback.m4,
 	48000, 48000, 48000)
 
 # BT offload
-PIPELINE_PCM_ADD(sof/pipe-passthrough-playback.m4,
+PIPELINE_PCM_ADD(sof/pipe-passthrough-playback-bt.m4,
 	eval(SMART_REF_PPL_ID + 1), 50, 1, s16le,
 	1000, 0, 0,
 	8000, 16000, 48000)
