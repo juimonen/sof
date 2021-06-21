@@ -521,7 +521,9 @@ static int kpb_prepare(struct comp_dev *dev)
 			ret = -EINVAL;
 			break;
 		}
-		if (dev_comp_type(sink->sink) == SOF_COMP_SELECTOR) {
+		if (dev_comp_type(sink->sink) == SOF_COMP_SELECTOR ||
+		    dev_comp_type(sink->sink) == SOF_COMP_MUX ||
+		    dev_comp_type(sink->sink) == SOF_COMP_DEMUX) {
 			/* We found proper real time sink */
 			kpb->sel_sink = sink;
 		} else if (dev_comp_type(sink->sink) == SOF_COMP_HOST) {
